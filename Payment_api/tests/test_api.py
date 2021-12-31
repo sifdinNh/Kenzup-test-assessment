@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework import  status
 from Payment_api.models import Transaction,User
 from Payment_api.serializers import TransactionSerializer
-
+import uuid
 
 
 class TransactionTestCase(APITestCase):
@@ -33,3 +33,37 @@ class TransactionTestCase(APITestCase):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         serializer=TransactionSerializer(self.transaction_list,many=True)
         self.assertEqual(response.data,serializer.data)
+
+class TransferTestCase(APITestCase):
+
+    def setUp(self):
+        self.sender_balance=1000.00
+        self.receiver_balance=500.00
+        self.sender=User.objects.create(username="sender",balance=self.sender_balance)
+        self.receiver=User.objects.create(username="receiver",balance=self.receiver_balance)
+        return super().setUp()
+
+    def test_create_transaction_with_non_exist_user(self):
+        fake_user_id=uuid.uuid4()
+        response=self.client.post(reverse('transfer'),{'sender':fake_user_id,
+                                                            'receiver':self.receiver.id,
+                                                            'amount':300.00},format="json")
+        self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)
+    def test_create_transaction_with_not_enough_money(self):
+        response=self.client.post(reverse('transfer'),{'sender':self.sender.id,
+                                                            'receiver':self.receiver.id,
+                                                            'amount':2000.00},format="json")
+        self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)
+                                            
+    def test_create_transaction_with_success_transfer(self):
+        amount_to_transfer=300.00
+        response=self.client.post(reverse('transfer'),{'sender':self.sender.id,
+                                                            'receiver':self.receiver.id,
+                                                            'amount':amount_to_transfer},format="json")
+        self.assertEqual(response.status_code,status.HTTP_201_CREATED)
+        sender=User.objects.get(id=self.sender.id)
+        receiver=User.objects.get(id=self.receiver.id)
+        self.assertEqual(float(response.data['amount']),amount_to_transfer)
+        self.assertEqual(sender.balance,self.sender_balance - amount_to_transfer)
+        self.assertEqual(receiver.balance,self.receiver_balance + amount_to_transfer)
+        

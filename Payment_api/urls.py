@@ -3,4 +3,5 @@ from django.urls import path
 from Payment_api import views
 urlpatterns = [
     path('ledger',views.TransactionListAPIView.as_view(),name="ledger"),
+    path('transfer',views.TransferAPIView.as_view(),name="transfer"),
 ]
