@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser, PermissionsMixin
 
 class User(AbstractUser,PermissionsMixin):
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
-    email=models.EmailField(unique=True)
+    email=models.EmailField(unique=True,null=True)
     first_name=models.CharField(max_length=30,null=True,blank=True)
     last_name=models.CharField(max_length=30,null=True,blank=True)
     balance = models.DecimalField(max_digits=10,decimal_places=2,default=0.0)
