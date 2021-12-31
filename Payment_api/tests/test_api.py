@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework import  status
 from Payment_api.models import Transaction,User
 from Payment_api.serializers import TransactionSerializer
-import uuid
+import uuid,decimal
 
 
 class TransactionTestCase(APITestCase):
@@ -43,7 +43,7 @@ class TransferTestCase(APITestCase):
         self.receiver=User.objects.create(username="receiver",balance=self.receiver_balance)
         return super().setUp()
 
-    def test_create_transaction_with_non_exist_user(self):
+    def test_create_transaction_with_non_existent_user(self):
         fake_user_id=uuid.uuid4()
         response=self.client.post(reverse('transfer'),{'sender':fake_user_id,
                                                             'receiver':self.receiver.id,
@@ -66,4 +66,18 @@ class TransferTestCase(APITestCase):
         self.assertEqual(float(response.data['amount']),amount_to_transfer)
         self.assertEqual(sender.balance,self.sender_balance - amount_to_transfer)
         self.assertEqual(receiver.balance,self.receiver_balance + amount_to_transfer)
-        
+    
+class BalanceTestCase(APITestCase):
+    def setUp(self):
+        self.user_balance=1000.00
+        self.user=User.objects.create(username="sender",balance=self.user_balance)
+        return super().setUp()
+    
+    def test_get_balance_with_non_existent_user(self):
+        fake_user_id=uuid.uuid4()
+        response=self.client.get(reverse('balance',kwargs={'id':fake_user_id}),format="json")
+        self.assertEqual(response.status_code,status.HTTP_404_NOT_FOUND)
+    def test_get_balance_with_success(self):
+        response=self.client.get(reverse('balance',kwargs={'id':self.user.id}),format="json")
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(response.data['balance'],self.user_balance)

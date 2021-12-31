@@ -54,3 +54,8 @@ class TransferAPIView(generics.CreateAPIView):
         sender.update(balance=F('balance')-amount)
         receiver.update(balance=F('balance')+amount)
         return super().get_success_headers(data)
+
+@api_view(['GET'])
+def BalanceAPIView(request,id):
+    user = get_object_or_404(User,id=id)
+    return Response({"balance":user.get_balance()})
