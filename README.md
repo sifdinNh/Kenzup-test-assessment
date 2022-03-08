@@ -12,6 +12,4 @@ balance.
 Create any needed app, table or object you need.
 Please make sure that error cases are covered with the appropriate response code, as well
 as implement the adequate amount of testing. Use git commits tourought your work.
-You will present a working version and explain your code and logic through screen share in
-a 30-45 minutes session.
-Anything that is not explicit in this document is at your own discretion.
+
