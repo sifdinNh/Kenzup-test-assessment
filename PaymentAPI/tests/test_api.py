@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework import  status
 from Payment_api.models import Transaction,User
 from Payment_api.serializers import TransactionSerializer
-import uuid,decimal
+import uuid
 
 
 class TransactionTestCase(APITestCase):

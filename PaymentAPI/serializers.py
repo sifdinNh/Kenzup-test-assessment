@@ -1,6 +1,6 @@
 from django.db.models import fields
 from rest_framework import serializers
-from Payment_api.models import Transaction,User
+from PaymentAPI.models import Transaction,User
 
 
 class TransactionSerializer(serializers.ModelSerializer):
@@ -13,3 +13,4 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email','first_name','last_name','balance')
+    

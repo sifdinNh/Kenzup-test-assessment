@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Payment_api',
+    'PaymentAPI',
     'rest_framework',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,8 @@ TEMPLATES = [
         },
     },
 ]
+
+
 
 WSGI_APPLICATION = 'KenzUp.wsgi.application'
 
@@ -121,5 +124,5 @@ STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
-AUTH_USER_MODEL = 'Payment_api.User'
+AUTH_USER_MODEL = 'PaymentAPI.User'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
